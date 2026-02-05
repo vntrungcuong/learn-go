@@ -1,0 +1,5 @@
+[X] Cấu hình kết nối Database (PostgreSQL) với Connection Pool.
+
+[-] Viết Model & Database Schema (File SQL).
+
+[] Hay dựng khung Server Fiber cơ bản trong main.go?
