@@ -4,11 +4,12 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 // [Database]
 type User struct {
-	ID        string    `json:"id"`
+	ID        uuid.UUID `json:"id"`
 	Email     string    `json:"email"`
 	Password  string    `json:"-"` // Không trả về password
 	Provider  string    `json:"provider"`
@@ -16,6 +17,14 @@ type User struct {
 	Role      string    `json:"role"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type RefreshToken struct {
+	ID        int       `json:"id" db:"id"`
+	UserID    uuid.UUID `json:"user_id" db:"user_id"`
+	Token     string    `json:"token" db:"token"`
+	ExpiresAt time.Time `json:"expires_at" db:"expires_at"`
+	IsRevoked bool      `json:"is_revoked" db:"is_revoked"`
 }
 
 type Product struct {
@@ -38,9 +47,9 @@ type LoginInput struct {
 
 // Struct cho Generate JWT Token cho Login response
 type Claims struct {
-	UserID string `json:"user_id"`
-	Email  string `json:"email"`
-	Role   string `json:"role"`
+	UserID uuid.UUID `json:"user_id"`
+	Email  string    `json:"email"`
+	Role   string    `json:"role"`
 	jwt.RegisteredClaims
 }
 
@@ -55,3 +64,18 @@ type RegisterInput struct {
 }
 
 // [End] Register
+
+// DTO cho Reset Password
+type ForgotPasswordInput struct {
+	Email string `json:"email" validate:"required,email"`
+}
+
+type ResetPasswordInput struct {
+	Token       string `json:"token" validate:"required"`
+	NewPassword string `json:"new_password" validate:"required,min=6"`
+}
+
+// DTO cho Refresh Token Request
+type RefreshTokenInput struct {
+	RefreshToken string `json:"refresh_token" validate:"required"`
+}

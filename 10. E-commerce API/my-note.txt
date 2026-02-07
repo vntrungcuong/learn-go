@@ -1,5 +1,44 @@
 [X] Cấu hình kết nối Database (PostgreSQL) với Connection Pool.
 
-[-] Viết Model & Database Schema (File SQL).
+[x] Viết Model & Database Schema (File SQL).
+
+[] Middleware bảo vệ API (Auth Middleware)
 
 [] Hay dựng khung Server Fiber cơ bản trong main.go?
+
+Build ứng dụng thành file .exe để tối ưu (không chạy bằng go run trên production):
+go build -ldflags "-s -w" -o server.exe ./cmd/server/main.go
+(Flag -s -w giúp giảm dung lượng file binary).
+
+Chạy file:
+./server.exe
+
+POST
+http://localhost:3000/api/v1/auth/register
+{
+    "email": "test@example.com",
+    "password": "password123",
+    "full_name": "Nguyen Van A"
+}
+
+POST
+http://localhost:3000/api/v1/auth/login
+{
+    "email": "test@example.com",
+    "password": "password123"
+}
+
+launch.json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Go Server",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/server/main.go",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

@@ -79,3 +79,71 @@ func LoginHandler(c *fiber.Ctx) error {
 		"type":  "Bearer",
 	})
 }
+
+// POST /api/v1/auth/refresh-token
+func RefreshTokenHanlder(c *fiber.Ctx) error {
+	var input models.RefreshTokenInput
+
+	// 1. Validate
+	if err := c.BodyParser(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid input",
+		})
+	}
+
+	// 2. Execute refresh token
+	tokens, err := services.RefreshToken(c.Context(), input.RefreshToken)
+	if err != nil {
+		c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(tokens)
+}
+
+// POST /api/v1/auth/logout
+func LogoutHanlder(c *fiber.Ctx) error {
+	var input models.RefreshTokenInput
+
+	// 1. Validate
+	if err := c.BodyParser(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid input",
+		})
+	}
+
+	// 2. Execute logout
+	if err := services.LogoutUser(c.Context(), input.RefreshToken); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Logout failed",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "Logged out successfully",
+	})
+}
+
+// POST /api/v1/auth/reset-password
+func ResetPasswordHanlder(c *fiber.Ctx) error {
+	var input models.ResetPasswordInput
+
+	// 1. Validate
+	if err := c.BodyParser(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid input",
+		})
+	}
+
+	// 2. Execute reset password
+	if err := services.ResetPassword(c.Context(), input); err != nil {
+		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "Reset password successfully",
+	})
+}

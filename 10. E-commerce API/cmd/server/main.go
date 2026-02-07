@@ -29,15 +29,26 @@ func main() {
 	// 5. Setup Routes
 	api := app.Group("/api/v1")
 
-	// Auth Routes
-	auth := api.Group("/auth")
-	auth.Post("/register", handlers.RegisterHandler)
-	auth.Post("/login", handlers.LoginHandler)
-
 	// Test Route
 	api.Get("/ping", func(c *fiber.Ctx) error {
 		return c.SendString("Pong! Server is running 🚀")
 	})
+
+	// Auth Routes
+	auth := api.Group("/auth")
+	auth.Post("/register", handlers.RegisterHandler)
+	auth.Post("/reset-password", handlers.ResetPasswordHanlder)
+	auth.Post("/login", handlers.LoginHandler)
+	auth.Post("/refresh-token", handlers.RefreshTokenHanlder)
+	auth.Post("/logout", handlers.LogoutHanlder)
+	/*
+		*** Authentication flow: ***
+		S1: Login: return accessToken (15m) and refreshToken (7 days)
+		S2: User use accessToken to use other API
+		S3: When accessToken expired, use API will response status 401 (Unauthorired), Client call API refresh-token to get new accessToken
+		Logic refresh-token API: Server check DB, if OK will generate new accessToken and delete old accessToken
+		S4: Logout: Delete refreshToken to DB to revoke token
+	*/
 
 	// 6. Start Server
 	log.Fatal(app.Listen(":3000"))

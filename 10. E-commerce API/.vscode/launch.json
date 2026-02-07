@@ -2,12 +2,43 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Go Server",
+            "name": "🚀 API: Launch Server (Development)",
             "type": "go",
             "request": "launch",
             "mode": "auto",
             "program": "${workspaceFolder}/cmd/server/main.go",
+            "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env",
+            "buildFlags": "-tags=dev",
+            "args": ["-port=3000", "-log=debug"],
+            "showLog": true,
+            "trace": "log" // Hữu ích khi cần debug chính trình gỡ lỗi Delve
+        },
+        {
+            "name": "🧪 Test: Debug Current File",
+            "type": "go",
+            "request": "launch",
+            "mode": "test",
+            "program": "${file}",
+            "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env",
+            "showLog": true
+        },
+        {
+            "name": "📦 Test: Debug Current Package",
+            "type": "go",
+            "request": "launch",
+            "mode": "test",
+            "program": "${fileDirname}",
+            "cwd": "${workspaceFolder}",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "🔗 Remote: Attach to Process",
+            "type": "go",
+            "request": "attach",
+            "mode": "local",
+            "processId": 0 // Bạn sẽ chọn process ID khi bắt đầu debug
         }
     ]
 }

@@ -1,3 +1,12 @@
+-- Run: psql -h localhost -U postgres -d ecommerce_db -f sql/schema.sql
+
+-- Chỉ hiển thị cảnh báo hoặc lỗi, bỏ qua các thông báo vụn vặt
+SET client_min_messages TO warning;
+
+-- Các lệnh bên dưới sẽ không còn hiện NOTICE nữa
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- ...
+
 -- 1. Cài đặt Extensions (Bắt buộc cho Performance & UUID)
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "ltree";

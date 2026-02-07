@@ -1,0 +1,6 @@
+name: ecommerce-api-local
+variables:
+  - name: baseURL
+    value: http://localhost:3000
+  - name: accessToken
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImNhNjk0NGJmLTM5YmYtNDU5NS04ZWVkLWI3ZmQwNDI3Y2E4YyIsImF1dGhvcml6ZWQiOnRydWUsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImV4cCI6MTc3MDM3MjA0OCwicm9sZSI6InVzZXIiLCJ1c2VyX2lkIjoiOTMwNTg2NTAtNDYzYi00MDVjLWJjMWYtNWU0ZDg3ZTJlNGMwIn0.h4jiYutp_AvyMTOxWNcR7-ggn7GXTYjRqSG01FlJFG8
