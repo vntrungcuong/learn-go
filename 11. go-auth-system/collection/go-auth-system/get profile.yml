@@ -4,8 +4,8 @@ info:
   seq: 4
 
 http:
-  method: POST
-  url: http://localhost:3000/api/profile
+  method: GET
+  url: http://localhost:3000/profile
   headers:
     - name: Authorization
       value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzEwNTY0NzIsImlhdCI6MTc3MDc5NzI3MiwidXNlcl9pZCI6IjIxZjg3ODU1LTFiMWQtNDFkMC1hODQ5LWU3OWVlZWI4MzM1MSJ9.feoTuMCH_TlXimKcVvBxM7LllX1XQRa5afekmIMXwXM

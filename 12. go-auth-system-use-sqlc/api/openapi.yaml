@@ -1,0 +1,164 @@
+openapi: 3.0.3
+info:
+  title: Go Auth System API
+  description: Hệ thống xác thực và quản lý người dùng chuẩn DDD, tích hợp Redis và PostgreSQL.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local Development Server
+  - url: https://api.yourdomain.com/api/v1
+    description: Azure Production Server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # --- Generic Response Wrapper ---
+    Meta:
+      type: object
+      properties:
+        request_id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        duration:
+          type: string
+          example: "1.2ms"
+
+    ErrorItem:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+        code:
+          type: string
+
+    APIResponse:
+      type: object
+      properties:
+        is_success:
+          type: boolean
+        message:
+          type: string
+        meta:
+          $ref: "#/components/schemas/Meta"
+
+    # --- Auth Specific ---
+    AuthData:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+
+    UserData:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        fullname:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+paths:
+  /auth/register:
+    post:
+      tags: [Authentication]
+      summary: Đăng ký tài khoản mới
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, fullname]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 6 }
+                fullname: { type: string }
+      responses:
+        "201":
+          description: Đăng ký thành công
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/APIResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/UserData" }
+
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Đăng nhập hệ thống
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        "200":
+          description: Đăng nhập thành công, trả về bộ token
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/APIResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/AuthData" }
+
+  /auth/profile:
+    get:
+      tags: [User Profile]
+      summary: Lấy thông tin cá nhân
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Thông tin người dùng hiện tại
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/APIResponse"
+                  - type: object
+                    properties:
+                      data: { $ref: "#/components/schemas/UserData" }
+        "401":
+          description: Unauthorized - Token không hợp lệ hoặc hết hạn
+
+  /auth/refresh-token:
+    post:
+      tags: [Authentication]
+      summary: Làm mới Access Token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token: { type: string }
+      responses:
+        "200":
+          description: Trả về Access Token mới

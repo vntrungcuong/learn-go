@@ -1,0 +1,24 @@
+info:
+  name: update profile
+  type: http
+  seq: 8
+
+http:
+  method: PUT
+  url: http://localhost:8080/api/v1/auth/profile
+  headers:
+    - name: Authorization
+      value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJjbGFpbXMiOnsiZXhwIjoxNzcxMjQ4NjcyLCJpYXQiOjE3NzEyNDc3NzJ9fQ.ss56fRD8lBYWjTWJJMW99Q3Bgur4BxNE-qgUIrPeAEQ
+  body:
+    type: json
+    data: |-
+      {
+        "fullname": ""
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

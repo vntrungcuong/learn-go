@@ -1,0 +1,30 @@
+version: "2"
+sql:
+  - schema: "db/migration" # Trỏ vào folder chứa các file .sql migration
+    queries: "sqlc/queries.sql" # Folder chứa các file definition queries (queries.sql, schema.sql)
+    engine: "postgresql" # Sử dụng PostgreSQL engine
+    gen:
+      go:
+        package: "db"
+        out: "internal/db/sqlc" # Nơi lưu code sau khi gen
+
+        # --- Senior Configurations ---
+        sql_package: "pgx/v5" # QUAN TRỌNG: Chỉ định dùng pgx/v5 thay cho database/sql
+        emit_interface: true # Xuất ra interface Querier để dùng trong store.go
+        emit_json_tags: true # Thêm json tags cho các struct để làm API
+        emit_db_tags: false # Thêm db tags nếu cần dùng với các library khác
+        emit_prepared_queries: false # pgx v5 quản lý prepared statements tự động và hiệu quả hơn
+        emit_exact_table_names: false # "users" -> "User" (Singular) cho đúng chuẩn Go struct
+
+        # --- Type Mapping & Overrides ---
+        # Giúp mapping các kiểu dữ liệu Postgres sang kiểu Go mong muốn một cách chính xác
+        overrides:
+          - db_type: "uuid"
+            go_type: "github.com/google/uuid.UUID"
+          - db_type: "timestamp"
+            go_type: "time.Time"
+          - db_type: "timestamptz"
+            go_type: "time.Time"
+          # Nếu bạn dùng kiểu JSONB trong Postgres, hãy override sang []byte hoặc map
+          - db_type: "jsonb"
+            go_type: "encoding/json.RawMessage"

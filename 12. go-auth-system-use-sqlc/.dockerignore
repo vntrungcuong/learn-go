@@ -1,0 +1,34 @@
+# Version Control
+.git
+.gitignore
+
+# Dependencies (Go handles this via go mod download)
+vendor/
+node_modules/
+
+# Binaries & Build Outputs
+bin/
+out/
+dist/
+*.exe
+*.dll
+*.so
+main
+
+# IDEs & Tools
+.vscode/
+.idea/
+.zed/
+*.swp
+*.swo
+
+# Configuration & Secrets
+.env*
+!.env.example
+docker-compose*.yaml
+Dockerfile*
+
+# Logs & Temp
+logs/
+*.log
+tmp/
